@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message Submission</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Submit a Message</h1>
+        <form id="messageForm">
+            <label for="message">Message:</label>
+            <input type="text" id="message" name="message" required>
+            <button type="submit">Submit</button>
+        </form>
+        <p id="responseMessage"></p>
+    </div>
+
+    <script>
+        document.getElementById("messageForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            const message = document.getElementById("message").value;
+
+            try {
+                const response = await fetch("/api/submitMessage", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: message })
+                });
+                const data = await response.json();
+
+                document.getElementById("responseMessage").innerText = 
+                    response.ok ? "Message submitted successfully!" : "Failed to submit message.";
+
+            } catch (error) {
+                document.getElementById("responseMessage").innerText = "Error submitting message.";
+            }
+        });
+    </script>
+</body>
+</html>
